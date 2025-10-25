@@ -51,7 +51,27 @@ def view_mission(mission_id):
         return "Mission not found", 404
     return render_template('mission.html', mission=mission, robot=robot)
 
+
+@app.route('/mission/<int:mission_id>/reset')
+def reset_robot(mission_id):
+    missioncontrol.reset_robot(mission_id)
+    return redirect(f'/mission/{mission_id}')
+
+@app.route('/move-robot', methods=['POST'])
+def move_robot():
+    mission_id = int(request.form.get("mission_id"))
+    instructions = request.form.get("instructions")  # e.g. "F,L,R,F"
+    
+    try:
+        missioncontrol.move_robot(mission_id, instructions)
+        print("Robot instructions executed!")
+    except Exception as e:
+        print(str(e))
+
+    return redirect(f'/mission/{mission_id}')
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     app.run(host='0.0.0.0', port=5000, debug=True)
+

@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
   </head>
   <style>
-    // For styles I will use copilot or ChatGPT to suggest to save time
+    // For styles I will use ChatGPT to suggest to save time
     button {
       background-color: #4caf50;
       border: none;
@@ -26,8 +26,11 @@
         vertical-align: middle;
     }
     .robot {
-        background-color: #f00;
+        background-color: grey;
         color: #fff;
+    }
+    .green {
+        background-color: green;
     }
   </style>
   <body>
@@ -44,17 +47,29 @@
 
         <p><strong>Mars Real Actual Size:</strong> {{ mission.max_x_axis }} x {{ mission.max_y_axis }}</p>
 
-        <p><strong> {{ robot.name }} Location: ({{ robot.x_coordinate }}, 
-            {{ robot.y_coordinate }}) facing {{ robot.orientation }}</strong></p>
+        <p><strong> {{ robot.name }} Location: 
+            {% if robot.out_of_bounds %}
+                LOST
+            {% else %}
+                ({{ robot.x_coordinate }}, {{ robot.y_coordinate }}) facing {{ robot.orientation }}
+            {% endif %}
 
+                        
+        </strong></p>
 
-
+<hr/>
+         
+{% if not mission.completed and mission.scent_x and mission.scent_y %} 
+<p>A robot seems to have been here before!</p>
+{% endif %}
          <table>
             {% for y in range(mission.max_y_axis-1, -1, -1) %}  
             <tr>
                 {% for x in range(mission.max_x_axis) %}
-                <td id="cell-{{ x }}-{{ y }}">
-
+                <td 
+                    id="cell-{{ x }}-{{ y }}" 
+                    class="{% if mission.scent_x and mission.scent_y and mission.scent_x-1 == x and mission.scent_y-1 == y %}green{% endif %}"
+                >
 
                     <!--Got this arrow suggestion from ChatGPT. Originally just used the rbot orientation-->
                     {% if robot.x_coordinate -1 == x and robot.y_coordinate-1 == y %}
@@ -75,23 +90,33 @@
                         &nbsp;
                     {% endif %}
 
+
+                    
+
                 </td>
                 {% endfor %}
             </tr>
             {% endfor %}
         </table>
 
-        <form method="POST">
+        <form method="POST" action="/move-robot">
+            <input type="hidden" name="mission_id" value="{{ mission.id }}"/>
+            
         
-        <p>Send Instructions to {{ robot.name }} by sending a comma separated string of codes</p>
-        <p> Be careful not to go out of bounds of Mars! {{ robot.name }} will be lost forever</p>
+            <p>Send Instructions to {{ robot.name }} by sending a comma separated string of codes</p>
+            <p> Be careful not to go out of bounds of Mars! {{ robot.name }} will be lost forever</p>
 
-        <p>Codes: F = Move Forward, L = Turn Left, R = Turn Right</p>
+            <p>Codes: F = Move Forward, L = Turn Left, R = Turn Right</p>
 
-        <label>Instructions: <input type="text" name="instructions" required></label>
-        <button type="submit">Send Mission</button>
+            <label>Instructions: <input type="text" name="instructions" required></label>
+            <button type="submit">Send Mission</button>
         </form>
 
+        <div>
+            <a href="/mission/{{ mission.id }}/reset">Reset Robot</a>
+        </div>
+        <br/>
+        <hr/>
         <button type="button" onclick="location.href='/'">
           Back to Home
         </button>

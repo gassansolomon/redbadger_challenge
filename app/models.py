@@ -21,6 +21,8 @@ class Mission(db.Model):
     successful = db.Column(db.Boolean, default=False)
     max_x_axis = db.Column(db.Integer, nullable=True)
     max_y_axis = db.Column(db.Integer, nullable=True)
+    scent_x = db.Column(db.Integer, nullable=True)
+    scent_y = db.Column(db.Integer, nullable=True)
 
     def __repr__(self):
         return "<Mission {self.id}>"

@@ -26,8 +26,8 @@ def test_create_mission(test_client):
 
         assert robot.id is not None
         assert robot.name == "TestBot"
-        assert robot.x_coordinate == 0
-        assert robot.y_coordinate == 0
+        assert robot.x_coordinate == 30
+        assert robot.y_coordinate == 30
         assert robot.orientation == "N"
         assert robot.out_of_bounds == False
 
@@ -56,3 +56,25 @@ def test_get_mission_by_id(test_client):
         assert fetched_mission.id == mission.id
         assert fetched_robot.id == robot.id
         assert fetched_robot.name == "TestBot2"
+
+def test_move_robot(test_client):
+    """Test moving the robot and updating mission instructions."""
+    with app.app_context():
+        mission, robot = create_mission(
+            robot_name="MoverBot",
+            x=15,
+            y=15,
+            orientation="S",
+            instructions="FFLFR"
+        )
+
+        from app.missioncontrol import move_robot
+        new_instructions = "RFFLFF"
+        move_robot(mission.id, new_instructions)
+
+        updated_mission = Mission.query.get(mission.id)
+        updated_robot = Robot.query.get(robot.id)
+
+        assert updated_mission.instructions == new_instructions
+        assert updated_robot.x_coordinate == robot.x_coordinate
+        assert updated_robot.y_coordinate == robot.y_coordinate
