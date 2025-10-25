@@ -5,11 +5,14 @@ Coding challenge for Red Badger
 See the Conding_Challenge.pdf for instructions. 
 
 ## To run the app
-- setup a python virtualenv
+- setup a python virtualenv:
 python3 -m venv venv 
 
-- activate the virtualenv
+- activate the virtualenv:
 . venv/bin/activate
 
-- run the app
+- run the app:
 python main.py
+
+- to run tests:
+  pytest -v tests.py
