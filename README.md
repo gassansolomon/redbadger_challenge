@@ -15,4 +15,5 @@ python3 -m venv venv
 python main.py
 
 - to run tests:
-  pytest -v tests.py
+  pytest -v tests.py -- running the tests seems to delete /instance/robots.db, git checkout the database if it's required again
+  
