@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+  </head>
+  <style>
+    // For styles I will use copilot or ChatGPT to suggest to save time
+    button {
+      background-color: #4caf50;
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+    }
+  </style>
+  <body>
+    <h1>Mars Mission</h1>
+    <button type="button" onclick="location.href='/mission'">
+      Start Mission
+    </button>
+
+    <div class="mission-list">
+      <h2>Previous Missions</h2>
+      <ul>
+        {% for mission in missions %}
+        <li>
+          <a href="/mission/{{ mission.id }}">
+            Mission {{ mission.id }} - Robot: {{ mission.robot.name }} - Completed: {{ mission.completed }} - Successful: {{ mission.successful }}
+          </a>
+        </li>
+        {% else %}
+        <li>No missions found.</li>
+        {% endfor %}
+      </ul>
+  </body>
+</html>

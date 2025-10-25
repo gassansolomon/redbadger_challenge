@@ -1,0 +1,99 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+  </head>
+  <style>
+    // For styles I will use copilot or ChatGPT to suggest to save time
+    button {
+      background-color: #4caf50;
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+    }
+
+    table { border-collapse: collapse; margin-bottom: 20px; }
+    td {
+        width: 20px;
+        height: 20px;
+        border: 1px solid #333;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .robot {
+        background-color: #f00;
+        color: #fff;
+    }
+  </style>
+  <body>
+    <h1>Mars Mission</h1>
+    <div>
+      
+      <p>Robot Assigned: {{ robot.name }}</p>
+      <p>Out of Bounds: {{ robot.out_of_bounds }}</p>
+      <p>Mission Completed: {{ mission.completed }}</p>
+      <p>Mission Successful: {{ mission.successful }}</p>
+      
+
+      <div class="grid-container">
+
+        <p><strong>Mars Real Actual Size:</strong> {{ mission.max_x_axis }} x {{ mission.max_y_axis }}</p>
+
+        <p><strong> {{ robot.name }} Location: ({{ robot.x_coordinate }}, 
+            {{ robot.y_coordinate }}) facing {{ robot.orientation }}</strong></p>
+
+
+
+         <table>
+            {% for y in range(mission.max_y_axis-1, -1, -1) %}  
+            <tr>
+                {% for x in range(mission.max_x_axis) %}
+                <td id="cell-{{ x }}-{{ y }}">
+
+
+                    <!--Got this arrow suggestion from ChatGPT. Originally just used the rbot orientation-->
+                    {% if robot.x_coordinate -1 == x and robot.y_coordinate-1 == y %}
+                        <div class="robot">
+
+                            
+                            {% if robot.orientation == "N" %}
+                                &#8593;
+                            {% elif robot.orientation == "S" %}
+                                &#8595;
+                            {% elif robot.orientation == "E" %}
+                                &#8594;
+                            {% elif robot.orientation == "W" %}
+                                &#8592;
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        &nbsp;
+                    {% endif %}
+
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+
+        <form method="POST">
+        
+        <p>Send Instructions to {{ robot.name }} by sending a comma separated string of codes</p>
+        <p> Be careful not to go out of bounds of Mars! {{ robot.name }} will be lost forever</p>
+
+        <p>Codes: F = Move Forward, L = Turn Left, R = Turn Right</p>
+
+        <label>Instructions: <input type="text" name="instructions" required></label>
+        <button type="submit">Send Mission</button>
+        </form>
+
+        <button type="button" onclick="location.href='/'">
+          Back to Home
+        </button>
+  </body>
+</html>
